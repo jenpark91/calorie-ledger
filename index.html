@@ -599,10 +599,7 @@ function enterApp(){
   $("authScreen").style.display="none";$("app").hidden=false;
   if(uid){
     $("acctRow").hidden=false;$("acctEmail").textContent=auth.currentUser.email;
-    $("brandSub").textContent="AI 식단 기록 · 클라우드 동기화";
-  }else{
-    $("acctRow").hidden=true;
-    $("brandSub").textContent="AI 식단 기록 · 이 기기에만 저장";
+    $("brandSub").textContent=uid?"클라우드 동기화":"이 기기 전용";
   }
   view="day";renderAll();
 }
