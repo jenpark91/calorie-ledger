@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17150f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>칼로리 장부</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --paper:#e9e5da;      /* 카페 종이 배경 */
+  --label:#fdfcf7;      /* 성분표 카드 */
+  --ink:#17150f;        /* 먹색 */
+  --ink-soft:#5c574b;
+  --herb:#3e6b35;       /* 허브 초록 (강조) */
+  --herb-soft:#e3ecdd;
+  --alert:#b3401f;
+  --hair:#c9c3b4;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  padding:0 0 calc(24px + env(safe-area-inset-bottom));
+}
+.wrap{max-width:480px;margin:0 auto;padding:0 16px}
+
+/* ── 헤더 ─────────────────────────── */
+header{
+  padding:calc(18px + env(safe-area-inset-top)) 0 14px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+}
+.brand{display:flex;align-items:baseline;gap:8px}
+.brand h1{
+  font-family:"Black Han Sans",sans-serif;font-weight:400;
+  font-size:26px;letter-spacing:-.5px;line-height:1;
+}
+.brand span{font-size:11px;color:var(--ink-soft);letter-spacing:.12em}
+.gear{
+  background:none;border:1.5px solid var(--ink);border-radius:8px;
+  padding:7px 12px;font:600 12.5px/1 "Pretendard Variable",sans-serif;
+  color:var(--ink);cursor:pointer;
+}
+.gear:active{transform:translateY(1px)}
+
+/* ── 날짜 이동 ─────────────────────── */
+.datenav{
+  display:flex;align-items:center;justify-content:space-between;
+  margin:6px 0 12px;gap:8px;
+}
+.datenav > button{
+  width:44px;height:44px;border:1.5px solid var(--ink);border-radius:10px;
+  background:var(--label);color:var(--ink);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.datenav > button:disabled{opacity:.3;cursor:default}
+.datebox{text-align:center}
+.datebox .dow{font-size:11px;letter-spacing:.25em;color:var(--ink-soft)}
+.datebox .d{
+  font-family:"Black Han Sans",sans-serif;font-size:24px;line-height:1.2;
+}
+.datebox .d em{font-style:normal;color:var(--herb)}
+.todaybtn{
+  border:none;background:none;color:var(--herb);font:700 11.5px/1 inherit;
+  cursor:pointer;text-decoration:underline;text-underline-offset:3px;
+  margin-top:2px;white-space:nowrap;
+}
+
+/* ── 성분표 카드 ───────────────────── */
+.label-card{
+  background:var(--label);
+  border:2.5px solid var(--ink);
+  border-radius:4px;
+  padding:0 16px 16px;
+  box-shadow:4px 4px 0 rgba(23,21,15,.12);
+}
+.nf-bar{height:9px;background:var(--ink);margin:0 -16px 4px}
+.nf-title{
+  font-size:11px;letter-spacing:.3em;color:var(--ink-soft);
+  padding:10px 0 2px;text-align:center;
+}
+.kcal-row{display:flex;align-items:baseline;justify-content:center;gap:10px;padding:2px 0 8px}
+.kcal-num{
+  font-family:"Black Han Sans",sans-serif;font-size:64px;line-height:1;
+  letter-spacing:-1px;font-variant-numeric:tabular-nums;
+}
+.kcal-unit{font-size:15px;font-weight:800;color:var(--ink-soft)}
+.thick-rule{border:none;border-top:6px solid var(--ink);margin:0 -4px 10px}
+.target-wrap{margin-top:2px}
+.target-line{
+  display:flex;justify-content:space-between;font-size:12px;
+  color:var(--ink-soft);margin-bottom:6px;
+}
+.target-line b{color:var(--ink);font-weight:800}
+.target-track{height:10px;border:1.5px solid var(--ink);background:var(--label);border-radius:2px;overflow:hidden}
+.target-fill{height:100%;background:var(--herb);width:0%;transition:width .5s ease}
+.target-fill.over{background:var(--alert)}
+
+/* ── 입력 폼 ──────────────────────── */
+.input-card{margin-top:14px}
+.meal-seg{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border:1.5px solid var(--ink);border-radius:8px;overflow:hidden;background:var(--label);
+}
+.meal-seg button{
+  padding:9px 0;border:none;background:none;font:700 13px/1 inherit;
+  color:var(--ink-soft);cursor:pointer;border-left:1.5px solid var(--ink);
+}
+.meal-seg button:first-child{border-left:none}
+.meal-seg button.on{background:var(--ink);color:var(--label)}
+.foodrow{display:flex;gap:8px;margin-top:10px}
+.foodrow input[type=text]{
+  flex:1;min-width:0;border:1.5px solid var(--ink);border-radius:10px;
+  background:var(--label);padding:14px 14px;font:500 15px/1.4 inherit;color:var(--ink);
+}
+.foodrow input[type=text]::placeholder{color:#9a947f}
+.foodrow input[type=text]:focus{outline:2.5px solid var(--herb);outline-offset:-1px}
+.addbtn{
+  border:none;background:var(--herb);color:#fff;border-radius:10px;
+  padding:0 18px;font:800 15px/1 inherit;cursor:pointer;white-space:nowrap;
+}
+.addbtn:disabled{opacity:.55;cursor:wait}
+.hint{font-size:11.5px;color:var(--ink-soft);margin-top:8px;line-height:1.5}
+
+/* ── 최근 먹은 조합 ────────────────── */
+.recent{margin-top:10px;display:none;gap:6px;flex-wrap:wrap}
+.recent.show{display:flex}
+.recent button{
+  border:1px solid var(--hair);background:var(--label);border-radius:999px;
+  padding:6px 11px;font:600 12px/1 inherit;color:var(--ink-soft);cursor:pointer;
+}
+
+/* ── 기록 목록 ─────────────────────── */
+.list-card{
+  background:var(--label);border:2.5px solid var(--ink);border-radius:4px;
+  margin-top:14px;box-shadow:4px 4px 0 rgba(23,21,15,.12);overflow:hidden;
+}
+.list-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 14px;border-bottom:2.5px solid var(--ink);
+}
+.list-head h2{font-size:13px;font-weight:800;letter-spacing:.05em}
+.list-head span{font-size:12px;color:var(--ink-soft)}
+.meal-block{border-bottom:1.5px solid var(--hair)}
+.meal-block:last-child{border-bottom:none}
+.meal-label{
+  display:flex;justify-content:space-between;padding:8px 14px 0;
+  font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--herb);
+}
+.entry{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+}
+.entry .nm{flex:1;min-width:0}
+.entry .nm b{display:block;font-size:14.5px;font-weight:700}
+.entry .nm small{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:1px}
+.entry .kc{
+  font-weight:800;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.entry .kc small{font-size:10.5px;color:var(--ink-soft);font-weight:600}
+.del{
+  border:none;background:none;color:var(--hair);font-size:17px;cursor:pointer;
+  padding:4px 2px;line-height:1;
+}
+.del:active,.del:hover{color:var(--alert)}
+.empty{padding:28px 16px;text-align:center;color:var(--ink-soft)}
+.empty b{display:block;font-size:14px;color:var(--ink);margin-bottom:4px}
+.empty p{font-size:12.5px;line-height:1.55}
+
+/* ── 주간 그래프 ───────────────────── */
+.week-card{
+  background:var(--label);border:2.5px solid var(--ink);border-radius:4px;
+  margin-top:14px;padding:13px 14px 15px;box-shadow:4px 4px 0 rgba(23,21,15,.12);
+}
+.week-card h2{font-size:12px;font-weight:800;letter-spacing:.05em;margin-bottom:10px}
+.week{display:flex;align-items:flex-end;gap:6px;height:88px}
+.day{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.day .bar{
+  width:100%;max-width:34px;border:1.5px solid var(--ink);border-bottom:none;
+  border-radius:3px 3px 0 0;background:var(--herb-soft);
+  transition:height .4s ease;position:relative;
+}
+.day .bar.zero{height:4px;border:none;border-radius:2px;background:var(--hair)}
+.day.sel .bar{background:var(--herb)}
+.day .v{font-size:9.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums;position:absolute;top:-15px;left:50%;transform:translateX(-50%);white-space:nowrap}
+.day .lb{font-size:10.5px;color:var(--ink-soft);height:13px}
+.day.sel .lb{color:var(--ink);font-weight:800}
+.week-base{border-top:1.5px solid var(--ink);margin-top:0}
+
+/* ── 설정 모달 ─────────────────────── */
+.overlay{
+  position:fixed;inset:0;background:rgba(23,21,15,.55);z-index:50;
+  display:none;align-items:flex-end;justify-content:center;
+}
+.overlay.show{display:flex}
+.sheet{
+  background:var(--label);width:100%;max-width:480px;
+  border-radius:16px 16px 0 0;padding:22px 20px calc(24px + env(safe-area-inset-bottom));
+  max-height:86vh;overflow:auto;
+}
+.sheet h2{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:20px;margin-bottom:4px}
+.sheet .sub{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:16px}
+.sheet label{display:block;font-size:12px;font-weight:800;margin:14px 0 5px;letter-spacing:.03em}
+.sheet label small{font-weight:500;color:var(--ink-soft)}
+.sheet input[type=text],.sheet input[type=password],.sheet input[type=number],.sheet select{
+  width:100%;border:1.5px solid var(--ink);border-radius:8px;background:#fff;
+  padding:11px 12px;font:500 14px/1.4 inherit;color:var(--ink);
+}
+.sheet input:focus,.sheet select:focus{outline:2.5px solid var(--herb);outline-offset:-1px}
+.sheet .row2{display:flex;gap:10px;margin-top:20px}
+.sheet .row2 button{
+  flex:1;padding:13px 0;border-radius:10px;font:800 14px/1 inherit;cursor:pointer;
+}
+.btn-ghost{background:none;border:1.5px solid var(--ink);color:var(--ink)}
+.btn-solid{background:var(--ink);border:1.5px solid var(--ink);color:var(--label)}
+.sheet .mini{display:flex;gap:8px;margin-top:8px}
+.sheet .mini button{
+  flex:1;border:1px solid var(--hair);background:none;border-radius:8px;
+  padding:9px 0;font:700 12px/1 inherit;color:var(--ink-soft);cursor:pointer;
+}
+.sheet .keylink{font-size:12px;margin-top:10px;line-height:1.6}
+.sheet .keylink a{color:var(--herb);font-weight:700}
+
+/* ── 토스트 ───────────────────────── */
+.toast{
+  position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));
+  transform:translate(-50%,20px);z-index:60;
+  background:var(--ink);color:var(--label);border-radius:10px;
+  padding:11px 18px;font:600 13px/1.4 inherit;max-width:88vw;text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.err{background:var(--alert)}
+.spin{
+  display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.4);
+  border-top-color:#fff;border-radius:50%;vertical-align:-2px;margin-right:6px;
+  animation:sp .7s linear infinite;
+}
+@keyframes sp{to{transform:rotate(360deg)}}
+.footer{margin:20px 0 0;text-align:center;font-size:11px;color:var(--ink-soft);line-height:1.7}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><h1>칼로리 장부</h1><span>AI 식단 기록</span></div>
+    <button class="gear" id="btnSettings">설정</button>
+  </header>
+
+  <nav class="datenav">
+    <button id="prevDay" aria-label="전날">‹</button>
+    <div class="datebox">
+      <div class="dow" id="dowLabel"></div>
+      <div class="d" id="dateLabel"></div>
+      <button class="todaybtn" id="btnToday" hidden>오늘로 돌아가기</button>
+    </div>
+    <button id="nextDay" aria-label="다음날">›</button>
+  </nav>
+
+  <section class="label-card">
+    <div class="nf-bar"></div>
+    <div class="nf-title" id="nfTitle">이 날의 총 섭취량</div>
+    <div class="kcal-row">
+      <span class="kcal-num" id="totalKcal">0</span>
+      <span class="kcal-unit">kcal</span>
+    </div>
+    <hr class="thick-rule">
+    <div class="target-wrap" id="targetWrap">
+      <div class="target-line">
+        <span>하루 목표 <b id="targetVal">미설정</b></span>
+        <span id="targetPct"></span>
+      </div>
+      <div class="target-track"><div class="target-fill" id="targetFill"></div></div>
+    </div>
+  </section>
+
+  <section class="input-card">
+    <div class="meal-seg" id="mealSeg">
+      <button data-meal="아침" class="on">아침</button>
+      <button data-meal="점심">점심</button>
+      <button data-meal="저녁">저녁</button>
+      <button data-meal="간식">간식</button>
+    </div>
+    <div class="foodrow">
+      <input type="text" id="foodInput" placeholder="예) 삼겹살 3인분, 밥 1공기" autocomplete="off" enterkeyhint="send">
+      <button class="addbtn" id="btnAdd">추가</button>
+    </div>
+    <div class="recent" id="recent"></div>
+    <p class="hint">음식과 양을 한 줄로 적으면 AI가 칼로리를 계산해 이 날짜에 기록합니다. 여러 개를 한 번에 적어도 됩니다.</p>
+  </section>
+
+  <section class="list-card">
+    <div class="list-head">
+      <h2>기록</h2><span id="entryCount"></span>
+    </div>
+    <div id="entryList"></div>
+  </section>
+
+  <section class="week-card">
+    <h2>최근 7일</h2>
+    <div class="week" id="weekChart"></div>
+    <div class="week-base"></div>
+  </section>
+
+  <p class="footer">기록은 이 기기(브라우저)에만 저장됩니다.<br>모바일 브라우저 메뉴에서 「홈 화면에 추가」하면 앱처럼 쓸 수 있어요.</p>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="sheet">
+    <h2>설정</h2>
+    <p class="sub">Gemini API 키는 이 기기에만 저장되며 서버로 보내지지 않습니다. 무료 키는 <b>aistudio.google.com/apikey</b>에서 발급할 수 있습니다.</p>
+    <label for="apiKey">Gemini API 키 <small>(필수)</small></label>
+    <input type="password" id="apiKey" placeholder="AIza...">
+    <label for="modelSel">모델</label>
+    <select id="modelSel">
+      <option value="gemini-3-flash-preview">Gemini 3 Flash (기본)</option>
+      <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
+      <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
+    </select>
+    <label for="targetInput">하루 칼로리 목표 <small>(선택 · kcal)</small></label>
+    <input type="number" id="targetInput" placeholder="예) 2000" min="0" step="50">
+    <div class="row2">
+      <button class="btn-ghost" id="btnExport">기록 내보내기</button>
+      <button class="btn-solid" id="btnSave">저장</button>
+    </div>
+    <div class="mini">
+      <button id="btnImport">기록 불러오기</button>
+      <button id="btnClear">전체 기록 삭제</button>
+    </div>
+    <input type="file" id="importFile" accept=".json" hidden>
+    <p class="keylink">API 키 발급: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> (무료)</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ───────────────── 상태 ───────────────── */
+const LS_KEY="calLedger.v1";
+/* ── 기본 설정: API 키 내장 ── */
+const BUILTIN_API_KEY="";
+const DEFAULT_MODEL="gemini-3-flash-preview";
+const FALLBACK_MODELS=["gemini-3.8-flash","gemini-3.6-flash"];
+
+let store=load();
+store.settings.apiKey=store.settings.apiKey||BUILTIN_API_KEY;
+store.settings.model=store.settings.model||DEFAULT_MODEL;
+
+function todayStr(){const d=new Date();return fmt(d);}
+function fmt(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function load(){
+  try{
+    const o=JSON.parse(localStorage.getItem(LS_KEY)||"{}");
+    return {entries:o.entries||{},settings:o.settings||{},recent:o.recent||[]};
+  }catch(e){return{entries:{},settings:{apiKey:"",model:"gemini-3.6-flash",target:0},recent:[]};}
+}
+function save(){localStorage.setItem(LS_KEY,JSON.stringify(store));}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ───────────────── 날짜 UI ───────────────── */
+const DOWS=["일","월","화","수","목","금","토"];
+function shiftDate(n){
+  const [y,m,d]=curDate.split("-").map(Number);
+  const dt=new Date(y,m-1,d+n);
+  curDate=fmt(dt);renderAll();
+}
+document.getElementById("prevDay").onclick=()=>shiftDate(-1);
+document.getElementById("nextDay").onclick=()=>shiftDate(1);
+document.getElementById("btnToday").onclick=()=>{curDate=todayStr();renderAll();};
+
+/* ───────────────── 렌더 ───────────────── */
+function renderAll(){
+  const [y,m,d]=curDate.split("-").map(Number);
+  const dt=new Date(y,m-1,d);
+  const dw=DOWS[dt.getDay()];
+  document.getElementById("dowLabel").textContent=y+"년 "+m+"월";
+  document.getElementById("dateLabel").innerHTML=(curDate===todayStr()?'<em>오늘 </em>':"")+m+"월 "+d+"일 "+dw+"요일";
+  document.getElementById("btnToday").hidden=(curDate===todayStr());
+  document.getElementById("nextDay").disabled=(curDate===todayStr());
+
+  const list=store.entries[curDate]||[];
+  const total=list.reduce((s,e)=>s+(+e.kcal||0),0);
+  document.getElementById("totalKcal").textContent=total.toLocaleString();
+  document.getElementById("nfTitle").textContent=curDate===todayStr()?"오늘 총 섭취량":"이 날의 총 섭취량";
+  document.getElementById("entryCount").textContent=list.length?list.length+"건":"기록 없음";
+
+  const t=+store.settings.target||0;
+  const fill=document.getElementById("targetFill");
+  if(t>0){
+    document.getElementById("targetVal").textContent=t.toLocaleString()+" kcal";
+    const pct=Math.round(total/t*100);
+    document.getElementById("targetPct").textContent=pct+"%";
+    fill.style.width=Math.min(pct,100)+"%";
+    fill.classList.toggle("over",pct>100);
+  }else{
+    document.getElementById("targetVal").textContent="미설정";
+    document.getElementById("targetPct").textContent="";
+    fill.style.width="0%";fill.classList.remove("over");
+    document.querySelector(".target-track").style.display="none";
+  }
+  document.querySelector(".target-track").style.display=t>0?"":"none";
+
+  const meals=["아침","점심","저녁","간식"];
+  const el=document.getElementById("entryList");
+  if(!list.length){
+    el.innerHTML='<div class="empty"><b>아직 기록이 없습니다</b><p>위에 오늘 먹은 음식을 적어 추가해 보세요.<br>AI가 양까지 보고 칼로리를 계산해 줍니다.</p></div>';
+  }else{
+    el.innerHTML=meals.map(ml=>{
+      const items=list.filter(e=>e.meal===ml);
+      if(!items.length)return"";
+      const ms=items.reduce((s,e)=>s+(+e.kcal||0),0);
+      return '<div class="meal-block"><div class="meal-label"><span>'+ml+'</span><span>'+ms.toLocaleString()+' kcal</span></div>'
+        +items.map(e=>
+          '<div class="entry"><div class="nm"><b>'+esc(e.name)+'</b><small>'+esc(e.portion||"")+'</small></div>'
+          +'<div class="kc">'+(+e.kcal).toLocaleString()+' <small>kcal</small></div>'
+          +'<button class="del" data-id="'+e.id+'" aria-label="삭제">✕</button></div>'
+        ).join("")+'</div>';
+    }).join("");
+    el.querySelectorAll(".del").forEach(b=>b.onclick=()=>{
+      const id=b.dataset.id;
+      store.entries[curDate]=store.entries[curDate].filter(e=>e.id!==id);
+      save();renderAll();
+    });
+  }
+  renderWeek();
+  renderRecent();
+}
+
+function renderWeek(){
+  const wrap=document.getElementById("weekChart");
+  const days=[];
+  const [y,m,d]=todayStr().split("-").map(Number);
+  const base=new Date(y,m-1,d);
+  for(let i=6;i>=0;i--){
+    const dt=new Date(base);dt.setDate(base.getDate()-i);
+    const key=fmt(dt);
+    const tot=(store.entries[key]||[]).reduce((s,e)=>s+(+e.kcal||0),0);
+    days.push({key,tot,lb:DOWS[dt.getDay()],isToday:key===todayStr(),isSel:key===curDate});
+  }
+  const max=Math.max(...days.map(x=>x.tot),+store.settings.target||0,1);
+  wrap.innerHTML=days.map(x=>{
+    const h=x.tot?Math.max(6,Math.round(x.tot/max*100)):0;
+    return '<div class="day'+(x.isSel?' sel':'')+'"><div class="bar'+(x.tot?'':' zero')+'" style="height:'+h+'%">'
+      +(x.tot?'<span class="v">'+(x.tot>=10000?(x.tot/1000).toFixed(1)+'k':x.tot)+'</span>':'')
+      +'</div><div class="lb">'+x.lb+'</div></div>';
+  }).join("");
+}
+
+function renderRecent(){
+  const el=document.getElementById("recent");
+  const r=store.recent||[];
+  if(!r.length){el.classList.remove("show");return;}
+  el.classList.add("show");
+  el.innerHTML=r.slice(0,6).map((it,i)=>
+    '<button data-i="'+i+'">'+esc(it.text)+' · '+(+it.kcal).toLocaleString()+' kcal</button>').join("");
+  el.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    const it=store.recent[+b.dataset.i];
+    document.getElementById("foodInput").value=it.text;
+    setMeal(it.meal||"아침");
+    submitFood(true);
+  });
+}
+
+/* ───────────────── 입력 ───────────────── */
+function setMeal(m){
+  curMeal=m;
+  document.querySelectorAll("#mealSeg button").forEach(b=>b.classList.toggle("on",b.dataset.meal===m));
+}
+document.getElementById("mealSeg").addEventListener("click",e=>{
+  if(e.target.dataset.meal)setMeal(e.target.dataset.meal);
+});
+
+const foodInput=document.getElementById("foodInput");
+const btnAdd=document.getElementById("btnAdd");
+foodInput.addEventListener("keydown",e=>{if(e.key==="Enter")submitFood();});
+btnAdd.onclick=()=>submitFood(false);
+
+function toast(msg,err){
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.toggle("err",!!err);t.classList.add("show");
+  clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove("show"),3200);
+}
+
+/* ───────────────── Gemini 호출 ───────────────── */
+const SYS_PROMPT=
+"너는 음식 칼로리 추정기다. 사용자가 한국어로 먹은 음식(들)과 양을 입력한다.\n"+
+"규칙:\n"+
+"1. 입력을 개별 음식 항목으로 분리한다.\n"+
+"2. kcal는 한국인이 흔히 먹는 양(1인분, 1공기, 1조각, 1컵, g 등) 기준 일반 영양 데이터로 정수 추정한다.\n"+
+"3. 애매한 양은 가장 흔한 상황으로 가정하고 portion 필드에 가정을 적는다(예: 3인분(약450g)).\n"+
+"4. 음료·술·소스·후식도 항목으로 포함한다.\n"+
+"5. 음식과 관련 없는 입력이면 items는 빈 배열로 하고 note에 이유를 짧게 쓴다.\n"+
+'출력은 JSON만: {"items":[{"name":"음식명","portion":"양 설명","kcal":정수}],"note":""}';
+
+async function callGemini(text){
+  const key=store.settings.apiKey.trim();
+  const models=[store.settings.model||DEFAULT_MODEL,...FALLBACK_MODELS]
+    .filter((m,i,a)=>a.indexOf(m)===i);
+  let lastErr=null;
+  for(const model of models){
+    const url="https://generativelanguage.googleapis.com/v1beta/models/"+model+":generateContent?key="+encodeURIComponent(key);
+    const res=await fetch(url,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        contents:[{role:"user",parts:[{text:text}]}],
+        systemInstruction:{parts:[{text:SYS_PROMPT}]},
+        generationConfig:{temperature:0.2,responseMimeType:"application/json"}
+      })
+    });
+    if(!res.ok){
+      let msg="API 오류 ("+res.status+")";
+      try{const j=await res.json();msg=j.error&&j.error.message?j.error.message:msg;}catch(e){}
+      if([503,500,429].includes(res.status)){lastErr=new Error(msg);continue;}
+      throw new Error(msg);
+    }
+    const data=await res.json();
+    const raw=data.candidates&&data.candidates[0]&&data.candidates[0].content&&data.candidates[0].content.parts
+      ?data.candidates[0].content.parts.map(p=>p.text||"").join(""):"";
+    let parsed;
+    try{parsed=JSON.parse(raw);}
+    catch(e){
+      const m=raw.match(/\{[\s\S]*\}/);
+      if(!m)throw new Error("응답을 해석하지 못했습니다. 다시 시도해 주세요.");
+      parsed=JSON.parse(m[0]);
+    }
+    return parsed;
+  }
+  throw lastErr||new Error("API 오류");
+}
+
+async function submitFood(fromRecent){
+  if(busy)return;
+  const text=foodInput.value.trim();
+  if(!text){foodInput.focus();return;}
+  if(!store.settings.apiKey.trim()){
+    toast("먼저 설정에서 Gemini API 키를 입력하세요",true);
+    openSheet();return;
+  }
+  busy=true;btnAdd.disabled=true;
+  btnAdd.innerHTML='<span class="spin"></span>계산 중';
+  try{
+    const out=await callGemini(text);
+    const items=(out.items||[]).filter(it=>it&&it.name&&Number.isFinite(+it.kcal));
+    if(!items.length){
+      toast(out.note||"음식으로 인식되지 않았습니다",true);
+    }else{
+      if(!store.entries[curDate])store.entries[curDate]=[];
+      for(const it of items){
+        store.entries[curDate].push({
+          id:Date.now()+"-"+Math.random().toString(36).slice(2,7),
+          meal:curMeal,name:it.name,portion:it.portion||"",kcal:Math.round(+it.kcal)
+        });
+      }
+      store.recent=[{text,meal:curMeal,kcal:items.reduce((s,i)=>s+(+i.kcal||0),0)},...(store.recent||[]).filter(r=>r.text!==text)].slice(0,12);
+      save();renderAll();
+      foodInput.value="";foodInput.blur();
+      toast(items.length+"개 항목을 "+curMeal+"에 기록했습니다");
+    }
+  }catch(err){
+    const m=String(err.message||err);
+    if(/API key not valid|API_KEY_INVALID/i.test(m))toast("API 키가 올바르지 않습니다. 설정에서 다시 확인하세요",true);
+    else if(/quota|RESOURCE_EXHAUSTED|429/i.test(m))toast("무료 사용 한도를 초과했습니다. 잠시 후 다시 시도하세요",true);
+    else if(/Failed to fetch|NetworkError/i.test(m))toast("네트워크 오류입니다. 연결을 확인하세요",true);
+    else toast(m.length>80?m.slice(0,80)+"…":m,true);
+  }finally{
+    busy=false;btnAdd.disabled=false;btnAdd.textContent="추가";
+  }
+}
+
+/* ───────────────── 설정 ───────────────── */
+const overlay=document.getElementById("overlay");
+function openSheet(){
+  document.getElementById("apiKey").value=store.settings.apiKey||"";
+  document.getElementById("modelSel").value=store.settings.model||"gemini-3.6-flash";
+  document.getElementById("targetInput").value=store.settings.target||"";
+  overlay.classList.add("show");
+}
+document.getElementById("btnSettings").onclick=openSheet;
+overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.classList.remove("show");});
+document.getElementById("btnSave").onclick=()=>{
+  store.settings.apiKey=document.getElementById("apiKey").value.trim();
+  store.settings.model=document.getElementById("modelSel").value;
+  store.settings.target=Math.max(0,+document.getElementById("targetInput").value||0);
+  save();overlay.classList.remove("show");renderAll();
+  toast(store.settings.apiKey?"설정을 저장했습니다":"API 키 없이 저장되었습니다");
+};
+document.getElementById("btnExport").onclick=()=>{
+  const blob=new Blob([JSON.stringify({entries:store.entries,settings:{model:store.settings.model,target:store.settings.target}},null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="칼로리장부_"+todayStr()+".json";
+  a.click();URL.revokeObjectURL(a.href);
+};
+document.getElementById("btnImport").onclick=()=>document.getElementById("importFile").click();
+document.getElementById("importFile").onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const j=JSON.parse(r.result);
+      if(!j.entries||typeof j.entries!=="object")throw 0;
+      store.entries=Object.assign({},store.entries,j.entries);
+      save();renderAll();toast("기록을 불러왔습니다");
+    }catch(_){toast("파일 형식이 올바르지 않습니다",true);}
+  };
+  r.readAsText(f);e.target.value="";
+};
+document.getElementById("btnClear").onclick=()=>{
+  if(!confirm("모든 날짜의 기록을 삭제합니다. 되돌릴 수 없습니다. 계속할까요?"))return;
+  store.entries={};store.recent=[];save();renderAll();toast("모든 기록을 삭제했습니다");
+};
+
+/* ───────────────── 데모 프리뷰(기록 저장 안 함) ───────────────── */
+function maybeDemo(){
+  if(!new URLSearchParams(location.search).has("demo"))return;
+  store.entries[todayStr()]=[
+    {id:"d1",meal:"아침",name:"계란토스트",portion:"1개 + 우유 1컵",kcal:480},
+    {id:"d2",meal:"점심",name:"김치찌개와 공깃밥",portion:"1인분 + 밥 1공기",kcal:780},
+    {id:"d3",meal:"간식",name:"아메리카노",portion:"톨, 무설탕",kcal:10},
+    {id:"d4",meal:"저녁",name:"삼겹살 구이",portion:"3인분 + 상추쌈",kcal:1520},
+    {id:"d5",meal:"저녁",name:"소주",portion:"반 병",kcal:320}
+  ];
+  store.settings.target=2000;
+  for(let i=1;i<7;i++){
+    const [y,m,d]=todayStr().split("-").map(Number);
+    const dt=new Date(y,m-1,d-i);
+    store.entries[fmt(dt)]=[{id:"x"+i,meal:"저녁",name:"예시 기록",portion:"",kcal:[1650,2100,1880,1420,2260,1740][i-1]}];
+  }
+}
+maybeDemo();
+renderAll();
+</script>
+</body>
+</html>
