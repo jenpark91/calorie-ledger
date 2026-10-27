@@ -585,7 +585,7 @@ async function pullCloud(){
 
 /* ═══════════════ Firebase 인증 ═══════════════ */
 const FB_CONFIGURED=!/PASTE/.test(firebaseConfig.projectId);
-let fbOK=false;
+let fbOK=false,localMode=false;
 if(window.firebase&&FB_CONFIGURED){
   try{
     firebase.initializeApp(firebaseConfig);
@@ -612,7 +612,7 @@ async function enterSignedIn(u){
   enterApp();
 }
 if(fbOK){
-  auth.onAuthStateChanged(u=>{if(u)enterSignedIn(u);else{uid=null;showAuth(false);}});
+  auth.onAuthStateChanged(u=>{if(u){localMode=false;enterSignedIn(u);}else if(!localMode){uid=null;showAuth(false);}});
 }else{
   showAuth(true);
 }
@@ -641,10 +641,11 @@ function authErrMsg(e){
   return "오류: "+(c||e);
 }
 $("btnLocal").onclick=()=>{
-  uid=null;data=loadCache();enterApp();
+  localMode=true;uid=null;data=loadCache();enterApp();
   toast("이 기기에만 저장됩니다");
 };
 function logout(){
+  localMode=false;
   if(fbOK&&uid)auth.signOut();
   uid=null;data=loadCache();
   showAuth(false);
