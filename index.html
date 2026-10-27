@@ -9,25 +9,25 @@
 <title>칼로리 장부</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#e9e5da;      /* 카페 종이 배경 */
   --label:#fdfcf7;      /* 성분표 카드 */
   --ink:#17150f;        /* 먹색 */
   --ink-soft:#5c574b;
-  --herb:#3e6b35;       /* 허브 초록 (강조) */
-  --herb-soft:#e3ecdd;
+  --herb:#6d4fc2;       /* 바이올렛 (강조) */
+  --herb-soft:#ece7f8;
   --alert:#b3401f;
   --hair:#c9c3b4;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
-  font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
+  font-family:"Noto Sans KR",-apple-system,sans-serif;
   background:var(--paper);
   color:var(--ink);
+  letter-spacing:-.02em;
   min-height:100vh;
   padding:0 0 calc(24px + env(safe-area-inset-bottom));
 }
@@ -35,7 +35,7 @@ body{
 
 /* ── 로그인 화면 ─────────────────── */
 #authScreen{max-width:380px;margin:0 auto;padding:calc(48px + env(safe-area-inset-top)) 20px 40px}
-.auth-brand{font-family:"Black Han Sans",sans-serif;font-size:34px;line-height:1;text-align:center}
+.auth-brand{font-family:"Noto Sans KR",sans-serif;font-weight:900;font-size:34px;line-height:1;text-align:center}
 .auth-sub{text-align:center;font-size:13px;color:var(--ink-soft);margin:8px 0 26px}
 .auth-card{
   background:var(--label);border:2.5px solid var(--ink);border-radius:4px;
@@ -66,14 +66,14 @@ header{
 }
 .brand{display:flex;align-items:baseline;gap:8px;min-width:0}
 .brand h1{
-  font-family:"Black Han Sans",sans-serif;font-weight:400;
+  font-family:"Noto Sans KR",sans-serif;font-weight:900;
   font-size:22px;letter-spacing:-.5px;line-height:1;white-space:nowrap;
 }
 .brand span{font-size:10.5px;color:var(--ink-soft);letter-spacing:.08em;white-space:nowrap}
 .hdr-btns{display:flex;gap:6px;flex-shrink:0}
 .hdr-btns button{
   background:none;border:1.5px solid var(--ink);border-radius:8px;
-  padding:7px 10px;font:600 12px/1 "Pretendard Variable",sans-serif;
+  padding:7px 10px;font:600 12px/1 "Noto Sans KR",sans-serif;
   color:var(--ink);cursor:pointer;white-space:nowrap;
 }
 .hdr-btns button.on{background:var(--ink);color:var(--label)}
@@ -97,7 +97,7 @@ header{
 .datebox{text-align:center}
 .datebox .dow{font-size:11px;letter-spacing:.25em;color:var(--ink-soft)}
 .datebox .d{
-  font-family:"Black Han Sans",sans-serif;font-size:24px;line-height:1.2;
+  font-family:"Noto Sans KR",sans-serif;font-weight:900;font-size:24px;line-height:1.2;
 }
 .datebox .d em{font-style:normal;color:var(--herb)}
 .todaybtn{
@@ -121,7 +121,7 @@ header{
 }
 .kcal-row{display:flex;align-items:baseline;justify-content:center;gap:10px;padding:2px 0 8px}
 .kcal-num{
-  font-family:"Black Han Sans",sans-serif;font-size:64px;line-height:1;
+  font-family:"Noto Sans KR",sans-serif;font-weight:900;font-size:64px;line-height:1;
   letter-spacing:-1px;font-variant-numeric:tabular-nums;
 }
 .kcal-unit{font-size:15px;font-weight:800;color:var(--ink-soft)}
@@ -232,7 +232,7 @@ header{
   display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
 }
 .cal-nav .m{
-  font-family:"Black Han Sans",sans-serif;font-size:22px;line-height:1;
+  font-family:"Noto Sans KR",sans-serif;font-weight:900;font-size:22px;line-height:1;
 }
 .cal-nav button{
   width:40px;height:40px;border:1.5px solid var(--ink);border-radius:10px;
@@ -277,7 +277,7 @@ header{
   border-radius:16px 16px 0 0;padding:22px 20px calc(24px + env(safe-area-inset-bottom));
   max-height:86vh;overflow:auto;
 }
-.sheet h2{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:20px;margin-bottom:4px}
+.sheet h2{font-family:"Noto Sans KR",sans-serif;font-weight:900;font-size:20px;margin-bottom:4px}
 .sheet .sub{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:16px}
 .sheet label{display:block;font-size:12px;font-weight:800;margin:14px 0 5px;letter-spacing:.03em}
 .sheet label small{font-weight:500;color:var(--ink-soft)}
