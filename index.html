@@ -33,23 +33,55 @@ body{
 }
 .wrap{max-width:480px;margin:0 auto;padding:0 16px}
 
+/* ── 로그인 화면 ─────────────────── */
+#authScreen{max-width:380px;margin:0 auto;padding:calc(48px + env(safe-area-inset-top)) 20px 40px}
+.auth-brand{font-family:"Black Han Sans",sans-serif;font-size:34px;line-height:1;text-align:center}
+.auth-sub{text-align:center;font-size:13px;color:var(--ink-soft);margin:8px 0 26px}
+.auth-card{
+  background:var(--label);border:2.5px solid var(--ink);border-radius:4px;
+  padding:22px 18px;box-shadow:4px 4px 0 rgba(23,21,15,.12);
+}
+.auth-card label{display:block;font-size:12px;font-weight:800;margin:0 0 5px}
+.auth-card input{
+  width:100%;border:1.5px solid var(--ink);border-radius:8px;background:#fff;
+  padding:12px;font:500 15px/1.4 inherit;color:var(--ink);margin-bottom:12px;
+}
+.auth-card input:focus{outline:2.5px solid var(--herb);outline-offset:-1px}
+.auth-card .row{display:flex;gap:8px}
+.auth-card .row button{flex:1;padding:13px 0;border-radius:10px;font:800 14px/1 inherit;cursor:pointer}
+.auth-note{font-size:11.5px;color:var(--ink-soft);line-height:1.6;margin-top:14px;text-align:center}
+.local-link{
+  display:block;text-align:center;margin-top:16px;border:none;background:none;
+  color:var(--ink-soft);font:600 13px/1 inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;
+}
+.fb-warn{
+  margin-top:14px;border:1.5px dashed var(--alert);border-radius:8px;
+  padding:10px 12px;font-size:11.5px;color:var(--alert);line-height:1.6;
+}
+
 /* ── 헤더 ─────────────────────────── */
 header{
-  padding:calc(18px + env(safe-area-inset-top)) 0 14px;
-  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:calc(18px + env(safe-area-inset-top)) 0 10px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:8px;
 }
-.brand{display:flex;align-items:baseline;gap:8px}
+.brand{display:flex;align-items:baseline;gap:8px;min-width:0}
 .brand h1{
   font-family:"Black Han Sans",sans-serif;font-weight:400;
-  font-size:26px;letter-spacing:-.5px;line-height:1;
+  font-size:22px;letter-spacing:-.5px;line-height:1;white-space:nowrap;
 }
-.brand span{font-size:11px;color:var(--ink-soft);letter-spacing:.12em}
-.gear{
+.brand span{font-size:10.5px;color:var(--ink-soft);letter-spacing:.08em;white-space:nowrap}
+.hdr-btns{display:flex;gap:6px;flex-shrink:0}
+.hdr-btns button{
   background:none;border:1.5px solid var(--ink);border-radius:8px;
-  padding:7px 12px;font:600 12.5px/1 "Pretendard Variable",sans-serif;
-  color:var(--ink);cursor:pointer;
+  padding:7px 10px;font:600 12px/1 "Pretendard Variable",sans-serif;
+  color:var(--ink);cursor:pointer;white-space:nowrap;
 }
-.gear:active{transform:translateY(1px)}
+.hdr-btns button.on{background:var(--ink);color:var(--label)}
+.acct-row{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11.5px;color:var(--ink-soft);padding:2px 0 8px;
+}
+.acct-row button{border:none;background:none;color:var(--herb);font:700 11.5px/1 inherit;cursor:pointer}
 
 /* ── 날짜 이동 ─────────────────────── */
 .datenav{
@@ -94,7 +126,6 @@ header{
 }
 .kcal-unit{font-size:15px;font-weight:800;color:var(--ink-soft)}
 .thick-rule{border:none;border-top:6px solid var(--ink);margin:0 -4px 10px}
-.target-wrap{margin-top:2px}
 .target-line{
   display:flex;justify-content:space-between;font-size:12px;
   color:var(--ink-soft);margin-bottom:6px;
@@ -129,8 +160,6 @@ header{
 }
 .addbtn:disabled{opacity:.55;cursor:wait}
 .hint{font-size:11.5px;color:var(--ink-soft);margin-top:8px;line-height:1.5}
-
-/* ── 최근 먹은 조합 ────────────────── */
 .recent{margin-top:10px;display:none;gap:6px;flex-wrap:wrap}
 .recent.show{display:flex}
 .recent button{
@@ -156,8 +185,9 @@ header{
   font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--herb);
 }
 .entry{
-  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;
 }
+.entry:active{background:var(--herb-soft)}
 .entry .nm{flex:1;min-width:0}
 .entry .nm b{display:block;font-size:14.5px;font-weight:700}
 .entry .nm small{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:1px}
@@ -188,13 +218,55 @@ header{
   transition:height .4s ease;position:relative;
 }
 .day .bar.zero{height:4px;border:none;border-radius:2px;background:var(--hair)}
-.day.sel .bar{background:var(--herb)}
 .day .v{font-size:9.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums;position:absolute;top:-15px;left:50%;transform:translateX(-50%);white-space:nowrap}
 .day .lb{font-size:10.5px;color:var(--ink-soft);height:13px}
 .day.sel .lb{color:var(--ink);font-weight:800}
-.week-base{border-top:1.5px solid var(--ink);margin-top:0}
+.week-base{border-top:1.5px solid var(--ink)}
 
-/* ── 설정 모달 ─────────────────────── */
+/* ── 달력 뷰 ──────────────────────── */
+.cal-card{
+  background:var(--label);border:2.5px solid var(--ink);border-radius:4px;
+  margin-top:6px;padding:16px 14px 18px;box-shadow:4px 4px 0 rgba(23,21,15,.12);
+}
+.cal-nav{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
+}
+.cal-nav .m{
+  font-family:"Black Han Sans",sans-serif;font-size:22px;line-height:1;
+}
+.cal-nav button{
+  width:40px;height:40px;border:1.5px solid var(--ink);border-radius:10px;
+  background:var(--label);font-size:17px;cursor:pointer;
+}
+.cal-nav button:disabled{opacity:.3;cursor:default}
+.cal-sum{
+  text-align:center;font-size:12px;color:var(--ink-soft);margin-bottom:10px;
+}
+.cal-sum b{color:var(--ink);font-weight:800}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dow{
+  text-align:center;font-size:10.5px;color:var(--ink-soft);padding-bottom:6px;
+  letter-spacing:.1em;
+}
+.cal-dow.sun{color:var(--alert)}
+.cal-cell{
+  min-height:56px;border:1px solid var(--hair);border-radius:4px;background:#fff;
+  padding:4px 4px 3px;text-align:left;cursor:pointer;font:inherit;
+  display:flex;flex-direction:column;gap:2px;
+}
+.cal-cell:active{background:var(--herb-soft)}
+.cal-cell.blank{border:none;background:none;cursor:default}
+.cal-cell.today{border:2px solid var(--ink)}
+.cal-cell.sel{background:var(--herb-soft);border-color:var(--herb)}
+.cal-cell .num{font-size:11.5px;font-weight:700;line-height:1.2}
+.cal-cell .kc{
+  font-size:10px;font-weight:800;color:var(--herb);line-height:1.25;
+  font-variant-numeric:tabular-nums;word-break:keep-all;
+}
+.cal-cell .kc.over{color:var(--alert)}
+.cal-legend{margin-top:10px;font-size:10.5px;color:var(--ink-soft);text-align:center;line-height:1.6}
+
+/* ── 설정 / 수정 모달 ─────────────── */
 .overlay{
   position:fixed;inset:0;background:rgba(23,21,15,.55);z-index:50;
   display:none;align-items:flex-end;justify-content:center;
@@ -209,17 +281,18 @@ header{
 .sheet .sub{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:16px}
 .sheet label{display:block;font-size:12px;font-weight:800;margin:14px 0 5px;letter-spacing:.03em}
 .sheet label small{font-weight:500;color:var(--ink-soft)}
-.sheet input[type=text],.sheet input[type=password],.sheet input[type=number],.sheet select{
+.sheet input[type=text],.sheet input[type=password],.sheet input[type=number],.sheet input[type=email],.sheet select{
   width:100%;border:1.5px solid var(--ink);border-radius:8px;background:#fff;
   padding:11px 12px;font:500 14px/1.4 inherit;color:var(--ink);
 }
 .sheet input:focus,.sheet select:focus{outline:2.5px solid var(--herb);outline-offset:-1px}
 .sheet .row2{display:flex;gap:10px;margin-top:20px}
-.sheet .row2 button{
+.sheet .row2 button,.sheet .row3 button{
   flex:1;padding:13px 0;border-radius:10px;font:800 14px/1 inherit;cursor:pointer;
 }
 .btn-ghost{background:none;border:1.5px solid var(--ink);color:var(--ink)}
 .btn-solid{background:var(--ink);border:1.5px solid var(--ink);color:var(--label)}
+.btn-danger{background:var(--alert);border:1.5px solid var(--alert);color:#fff}
 .sheet .mini{display:flex;gap:8px;margin-top:8px}
 .sheet .mini button{
   flex:1;border:1px solid var(--hair);background:none;border-radius:8px;
@@ -227,6 +300,13 @@ header{
 }
 .sheet .keylink{font-size:12px;margin-top:10px;line-height:1.6}
 .sheet .keylink a{color:var(--herb);font-weight:700}
+.acct-box{
+  border:1.5px solid var(--hair);border-radius:8px;padding:10px 12px;
+  font-size:12.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;
+  margin-top:16px;
+}
+.acct-box .who{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acct-box button{border:1px solid var(--hair);background:none;border-radius:7px;padding:7px 10px;font:700 11.5px/1 inherit;color:var(--ink);cursor:pointer;white-space:nowrap}
 
 /* ── 토스트 ───────────────────────── */
 .toast{
@@ -251,70 +331,120 @@ header{
 </style>
 </head>
 <body>
+
+<!-- ── 로그인 화면 ── -->
+<div id="authScreen">
+  <div class="auth-brand">칼로리 장부</div>
+  <div class="auth-sub">먹은 음식을 적으면 AI가 칼로리를 계산해 기록합니다</div>
+  <div class="auth-card">
+    <label for="authEmail">이메일</label>
+    <input type="email" id="authEmail" autocomplete="email" placeholder="name@example.com">
+    <label for="authPass">비밀번호</label>
+    <input type="password" id="authPass" autocomplete="current-password" placeholder="6자 이상">
+    <div class="row">
+      <button class="btn-solid" id="btnLogin">로그인</button>
+      <button class="btn-ghost" id="btnSignup">회원가입</button>
+    </div>
+    <div class="auth-note" id="authNote">가입한 계정마다 기록이 따로 저장되며,<br>다른 사람은 내 기록을 볼 수 없습니다.</div>
+    <div class="fb-warn" id="fbWarn" hidden>
+      아직 앱이 클라우드에 연결되지 않았습니다.<br>
+      계정 기능을 쓰려면 Firebase 설정이 필요합니다(앱 안내 참고).
+    </div>
+    <button class="local-link" id="btnLocal">계정 없이 이 기기에서만 쓰기</button>
+  </div>
+</div>
+
+<!-- ── 앱 ── -->
+<div id="app" hidden>
 <div class="wrap">
   <header>
-    <div class="brand"><h1>칼로리 장부</h1><span>AI 식단 기록</span></div>
-    <button class="gear" id="btnSettings">설정</button>
+    <div class="brand"><h1>칼로리 장부</h1><span id="brandSub">AI 식단 기록</span></div>
+    <div class="hdr-btns">
+      <button id="btnDayView" class="on">일간</button>
+      <button id="btnMonthView">달력</button>
+      <button id="btnSettings">설정</button>
+    </div>
   </header>
+  <div class="acct-row" id="acctRow" hidden>
+    <span id="acctEmail"></span>
+    <button id="btnLogout">로그아웃</button>
+  </div>
 
-  <nav class="datenav">
-    <button id="prevDay" aria-label="전날">‹</button>
-    <div class="datebox">
-      <div class="dow" id="dowLabel"></div>
-      <div class="d" id="dateLabel"></div>
-      <button class="todaybtn" id="btnToday" hidden>오늘로 돌아가기</button>
-    </div>
-    <button id="nextDay" aria-label="다음날">›</button>
-  </nav>
+  <!-- 일간 뷰 -->
+  <div id="dayView">
+    <nav class="datenav">
+      <button id="prevDay" aria-label="전날">‹</button>
+      <div class="datebox">
+        <div class="dow" id="dowLabel"></div>
+        <div class="d" id="dateLabel"></div>
+        <button class="todaybtn" id="btnToday" hidden>오늘로 돌아가기</button>
+      </div>
+      <button id="nextDay" aria-label="다음날">›</button>
+    </nav>
 
-  <section class="label-card">
-    <div class="nf-bar"></div>
-    <div class="nf-title" id="nfTitle">이 날의 총 섭취량</div>
-    <div class="kcal-row">
-      <span class="kcal-num" id="totalKcal">0</span>
-      <span class="kcal-unit">kcal</span>
-    </div>
-    <hr class="thick-rule">
-    <div class="target-wrap" id="targetWrap">
+    <section class="label-card">
+      <div class="nf-bar"></div>
+      <div class="nf-title" id="nfTitle">오늘 총 섭취량</div>
+      <div class="kcal-row">
+        <span class="kcal-num" id="totalKcal">0</span>
+        <span class="kcal-unit">kcal</span>
+      </div>
+      <hr class="thick-rule">
       <div class="target-line">
         <span>하루 목표 <b id="targetVal">미설정</b></span>
         <span id="targetPct"></span>
       </div>
-      <div class="target-track"><div class="target-fill" id="targetFill"></div></div>
-    </div>
-  </section>
+      <div class="target-track" id="targetTrack"><div class="target-fill" id="targetFill"></div></div>
+    </section>
 
-  <section class="input-card">
-    <div class="meal-seg" id="mealSeg">
-      <button data-meal="아침" class="on">아침</button>
-      <button data-meal="점심">점심</button>
-      <button data-meal="저녁">저녁</button>
-      <button data-meal="간식">간식</button>
-    </div>
-    <div class="foodrow">
-      <input type="text" id="foodInput" placeholder="예) 삼겹살 3인분, 밥 1공기" autocomplete="off" enterkeyhint="send">
-      <button class="addbtn" id="btnAdd">추가</button>
-    </div>
-    <div class="recent" id="recent"></div>
-    <p class="hint">음식과 양을 한 줄로 적으면 AI가 칼로리를 계산해 이 날짜에 기록합니다. 여러 개를 한 번에 적어도 됩니다.</p>
-  </section>
+    <section class="input-card">
+      <div class="meal-seg" id="mealSeg">
+        <button data-meal="아침" class="on">아침</button>
+        <button data-meal="점심">점심</button>
+        <button data-meal="저녁">저녁</button>
+        <button data-meal="간식">간식</button>
+      </div>
+      <div class="foodrow">
+        <input type="text" id="foodInput" placeholder="예) 삼겹살 3인분, 밥 1공기" autocomplete="off" enterkeyhint="send">
+        <button class="addbtn" id="btnAdd">추가</button>
+      </div>
+      <div class="recent" id="recent"></div>
+      <p class="hint">음식과 양을 한 줄로 적으면 AI가 칼로리를 계산해 기록합니다. 기록을 누르면 수정할 수 있어요.</p>
+    </section>
 
-  <section class="list-card">
-    <div class="list-head">
-      <h2>기록</h2><span id="entryCount"></span>
-    </div>
-    <div id="entryList"></div>
-  </section>
+    <section class="list-card">
+      <div class="list-head">
+        <h2>기록</h2><span id="entryCount"></span>
+      </div>
+      <div id="entryList"></div>
+    </section>
 
-  <section class="week-card">
-    <h2>최근 7일</h2>
-    <div class="week" id="weekChart"></div>
-    <div class="week-base"></div>
-  </section>
+    <section class="week-card">
+      <h2>최근 7일</h2>
+      <div class="week" id="weekChart"></div>
+      <div class="week-base"></div>
+    </section>
+  </div>
 
-  <p class="footer">기록은 이 기기(브라우저)에만 저장됩니다.<br>모바일 브라우저 메뉴에서 「홈 화면에 추가」하면 앱처럼 쓸 수 있어요.</p>
+  <!-- 달력 뷰 -->
+  <div id="monthView" hidden>
+    <section class="cal-card">
+      <div class="cal-nav">
+        <button id="prevMonth" aria-label="이전 달">‹</button>
+        <div class="m" id="monthTitle"></div>
+        <button id="nextMonth" aria-label="다음 달">›</button>
+      </div>
+      <div class="cal-sum" id="calSum"></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">날짜를 누르면 그 날의 기록으로 이동합니다</div>
+    </section>
+  </div>
+
+  <p class="footer" id="footerNote">계정으로 로그인하면 기록이 클라우드에 저장되어<br>기기가 바뀌어도 이어집니다.</p>
+</div>
 </div>
 
+<!-- 설정 -->
 <div class="overlay" id="overlay">
   <div class="sheet">
     <h2>설정</h2>
@@ -339,98 +469,268 @@ header{
     </div>
     <input type="file" id="importFile" accept=".json" hidden>
     <p class="keylink">API 키 발급: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> (무료)</p>
+    <div class="acct-box" id="acctBox" hidden>
+      <span class="who" id="acctWho"></span>
+      <button id="btnLogout2">로그아웃</button>
+    </div>
+  </div>
+</div>
+
+<!-- 기록 수정 -->
+<div class="overlay" id="editOverlay">
+  <div class="sheet">
+    <h2>기록 수정</h2>
+    <label for="editMeal">끼니</label>
+    <select id="editMeal">
+      <option>아침</option><option>점심</option><option>저녁</option><option>간식</option>
+    </select>
+    <label for="editName">음식</label>
+    <input type="text" id="editName" autocomplete="off">
+    <label for="editPortion">양 <small>(선택)</small></label>
+    <input type="text" id="editPortion" autocomplete="off">
+    <label for="editKcal">칼로리 (kcal)</label>
+    <input type="number" id="editKcal" min="0" step="1">
+    <div class="row3" style="display:flex;gap:10px;margin-top:20px">
+      <button class="btn-danger" id="btnDeleteEntry">삭제</button>
+      <button class="btn-ghost" id="btnEditCancel">취소</button>
+      <button class="btn-solid" id="btnEditSave">저장</button>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 "use strict";
-/* ───────────────── 상태 ───────────────── */
-const LS_KEY="calLedger.v1";
-/* ── 기본 설정: API 키 내장 ── */
-const BUILTIN_API_KEY="";
+/* ═══════════════ 기본 설정 ═══════════════ */
 const DEFAULT_MODEL="gemini-3-flash-preview";
 const FALLBACK_MODELS=["gemini-3.8-flash","gemini-3.6-flash"];
+const MEALS=["아침","점심","저녁","간식"];
 
-let store=load();
-store.settings.apiKey=store.settings.apiKey||BUILTIN_API_KEY;
-store.settings.model=store.settings.model||DEFAULT_MODEL;
+/* ★ Firebase 연결 값: 여기에 웹 앱 구성(config)을 붙여넣습니다 ★ */
+const firebaseConfig={
+  apiKey:"PASTE_FIREBASE_APIKEY",
+  authDomain:"PASTE_PROJECT.firebaseapp.com",
+  projectId:"PASTE_PROJECT_ID",
+  storageBucket:"",
+  messagingSenderId:"",
+  appId:""
+};
+
+/* ═══════════════ 상태 ═══════════════ */
+let auth=null,db=null,uid=null;        // 로그인 상태 (uid=null → 이 기기 전용 모드)
+let data={entries:{}};                 // 현재 계정의 데이터 { "YYYY-MM-DD":[항목...] }
+let store=loadPrefs();                 // 기기별 설정(키/모델/목표/최근조합)
+let curDate=todayStr();
+let curMeal="아침";
+let busy=false;
+let view="day";                        // "day" | "month"
+let calY,calM;                         // 달력에 표시 중인 연/월
 
 function todayStr(){const d=new Date();return fmt(d);}
 function fmt(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
-function load(){
+function loadPrefs(){
   try{
-    const o=JSON.parse(localStorage.getItem(LS_KEY)||"{}");
-    return {entries:o.entries||{},settings:o.settings||{},recent:o.recent||[]};
-  }catch(e){return{entries:{},settings:{apiKey:"",model:"gemini-3.6-flash",target:0},recent:[]};}
+    const o=JSON.parse(localStorage.getItem("calLedger.prefs")||"{}");
+    return {apiKey:o.apiKey||"",model:o.model||DEFAULT_MODEL,target:o.target||0,recent:o.recent||[]};
+  }catch(e){return{apiKey:"",model:DEFAULT_MODEL,target:0,recent:[]};}
 }
-function save(){localStorage.setItem(LS_KEY,JSON.stringify(store));}
+function savePrefs(){localStorage.setItem("calLedger.prefs",JSON.stringify({apiKey:store.apiKey,model:store.model,target:store.target,recent:store.recent}));}
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-
-/* ───────────────── 날짜 UI ───────────────── */
-const DOWS=["일","월","화","수","목","금","토"];
-function shiftDate(n){
-  const [y,m,d]=curDate.split("-").map(Number);
-  const dt=new Date(y,m-1,d+n);
-  curDate=fmt(dt);renderAll();
+function $(id){return document.getElementById(id);}
+function toast(msg,err){
+  const t=$("toast");
+  t.textContent=msg;t.classList.toggle("err",!!err);t.classList.add("show");
+  clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove("show"),3200);
 }
-document.getElementById("prevDay").onclick=()=>shiftDate(-1);
-document.getElementById("nextDay").onclick=()=>shiftDate(1);
-document.getElementById("btnToday").onclick=()=>{curDate=todayStr();renderAll();};
 
-/* ───────────────── 렌더 ───────────────── */
+/* ═══════════════ 데이터 계층 ═══════════════ */
+function cacheKey(){return "calLedger.d."+(uid||"local");}
+function loadCache(){
+  try{
+    const o=JSON.parse(localStorage.getItem(cacheKey())||"{}");
+    if(o&&typeof o.entries==="object")return o;
+  }catch(e){}
+  /* 이전 버전(calLedger.v1) 마이그레이션 */
+  try{
+    const old=JSON.parse(localStorage.getItem("calLedger.v1")||"{}");
+    if(old.entries&&Object.keys(old.entries).length)return{entries:old.entries};
+  }catch(e){}
+  return{entries:{}};
+}
+function persist(){localStorage.setItem(cacheKey(),JSON.stringify(data));}
+function getDay(date){return data.entries[date]||[];}
+function setDay(date,arr){
+  if(arr.length)data.entries[date]=arr;else delete data.entries[date];
+  persist();
+  if(uid&&db){
+    const ref=db.collection("users").doc(uid).collection("days").doc(date);
+    if(arr.length)ref.set({items:arr}).catch(()=>toast("동기화 실패 — 오프라인이면 나중에 다시 시도됩니다",true));
+    else ref.delete().catch(()=>{});
+  }
+}
+function totalOf(date){return getDay(date).reduce((s,e)=>s+(+e.kcal||0),0);}
+
+async function pullCloud(){
+  const snap=await db.collection("users").doc(uid).collection("days").get();
+  const days={};snap.forEach(d=>{days[d.id]=d.data().items||[];});
+  data={entries:days};persist();
+}
+
+/* ═══════════════ Firebase 인증 ═══════════════ */
+const FB_CONFIGURED=!/PASTE/.test(firebaseConfig.projectId);
+let fbOK=false;
+if(window.firebase&&FB_CONFIGURED){
+  try{
+    firebase.initializeApp(firebaseConfig);
+    auth=firebase.auth();db=firebase.firestore();
+    fbOK=true;
+  }catch(e){console.error(e);}
+}
+
+function showAuth(warn){
+  $("authScreen").style.display="";$("app").hidden=true;
+  $("fbWarn").hidden=!warn;
+}
+function enterApp(){
+  $("authScreen").style.display="none";$("app").hidden=false;
+  if(uid){
+    $("acctRow").hidden=false;$("acctEmail").textContent=auth.currentUser.email;
+    $("brandSub").textContent="AI 식단 기록 · 클라우드 동기화";
+  }else{
+    $("acctRow").hidden=true;
+    $("brandSub").textContent="AI 식단 기록 · 이 기기에만 저장";
+  }
+  view="day";renderAll();
+}
+async function enterSignedIn(u){
+  uid=u.uid;data=loadCache();
+  try{await pullCloud();}catch(e){toast("클라우드 불러오기 실패 — 캐시로 표시합니다",true);}
+  enterApp();
+}
+if(fbOK){
+  auth.onAuthStateChanged(u=>{if(u)enterSignedIn(u);else{uid=null;showAuth(false);}});
+}else{
+  showAuth(true);
+}
+
+$("btnLogin").onclick=()=>{
+  const email=$("authEmail").value.trim(),pass=$("authPass").value;
+  if(!email||!pass){toast("이메일과 비밀번호를 입력하세요",true);return;}
+  if(!fbOK){toast("클라우드가 연결되지 않아 로그인할 수 없습니다",true);return;}
+  auth.signInWithEmailAndPassword(email,pass).catch(e=>toast(authErrMsg(e),true));
+};
+$("btnSignup").onclick=()=>{
+  const email=$("authEmail").value.trim(),pass=$("authPass").value;
+  if(!email||!pass){toast("이메일과 비밀번호를 입력하세요",true);return;}
+  if(pass.length<6){toast("비밀번호는 6자 이상이어야 합니다",true);return;}
+  if(!fbOK){toast("클라우드가 연결되지 않아 가입할 수 없습니다",true);return;}
+  auth.createUserWithEmailAndPassword(email,pass).catch(e=>toast(authErrMsg(e),true));
+};
+function authErrMsg(e){
+  const c=(e&&e.code)||"";
+  if(/invalid-email/.test(c))return "이메일 형식이 올바르지 않습니다";
+  if(/email-already-in-use/.test(c))return "이미 가입된 이메일입니다. 로그인해 주세요";
+  if(/weak-password/.test(c))return "비밀번호는 6자 이상이어야 합니다";
+  if(/invalid-credential|wrong-password|user-not-found/.test(c))return "이메일 또는 비밀번호가 올바르지 않습니다";
+  if(/too-many-requests/.test(c))return "시도가 너무 많습니다. 잠시 후 다시 시도하세요";
+  if(/network/.test(c))return "네트워크 오류입니다. 연결을 확인하세요";
+  return "오류: "+(c||e);
+}
+$("btnLocal").onclick=()=>{
+  uid=null;data=loadCache();enterApp();
+  toast("이 기기에만 저장됩니다");
+};
+function logout(){
+  if(fbOK&&uid)auth.signOut();
+  uid=null;data=loadCache();
+  showAuth(false);
+}
+$("btnLogout").onclick=logout;
+$("btnLogout2").onclick=logout;
+
+/* ═══════════════ 뷰 전환 ═══════════════ */
+$("btnDayView").onclick=()=>{view="day";renderAll();};
+$("btnMonthView").onclick=()=>{
+  view="month";
+  const[y,m]=curDate.split("-").map(Number);calY=y;calM=m;
+  renderAll();
+};
+$("prevMonth").onclick=()=>{calM--;if(calM<1){calM=12;calY--;}renderAll();};
+$("nextMonth").onclick=()=>{calM++;if(calM>12){calM=1;calY++;}renderAll();};
+
+/* ═══════════════ 렌더 ═══════════════ */
+const DOWS=["일","월","화","수","목","금","토"];
 function renderAll(){
-  const [y,m,d]=curDate.split("-").map(Number);
+  $("btnDayView").classList.toggle("on",view==="day");
+  $("btnMonthView").classList.toggle("on",view==="month");
+  $("dayView").hidden=view!=="day";
+  $("monthView").hidden=view!=="month";
+  $("footerNote").innerHTML=uid
+    ?"계정(<b>"+esc(auth.currentUser.email)+"</b>)의 기록은 클라우드에 저장됩니다.<br>모바일 브라우저 메뉴에서 「홈 화면에 추가」하면 앱처럼 쓸 수 있어요."
+    :"기록은 이 기기에만 저장됩니다. 설정에서 계정을 연결하면<br>기기가 바뀌어도 이어집니다.";
+  if(view==="day")renderDay();else renderMonth();
+}
+
+function renderDay(){
+  const[y,m,d]=curDate.split("-").map(Number);
   const dt=new Date(y,m-1,d);
-  const dw=DOWS[dt.getDay()];
   document.getElementById("dowLabel").textContent=y+"년 "+m+"월";
-  document.getElementById("dateLabel").innerHTML=(curDate===todayStr()?'<em>오늘 </em>':"")+m+"월 "+d+"일 "+dw+"요일";
+  document.getElementById("dateLabel").innerHTML=(curDate===todayStr()?'<em>오늘 </em>':"")+m+"월 "+d+"일 "+DOWS[dt.getDay()]+"요일";
   document.getElementById("btnToday").hidden=(curDate===todayStr());
   document.getElementById("nextDay").disabled=(curDate===todayStr());
 
-  const list=store.entries[curDate]||[];
+  const list=getDay(curDate);
   const total=list.reduce((s,e)=>s+(+e.kcal||0),0);
   document.getElementById("totalKcal").textContent=total.toLocaleString();
   document.getElementById("nfTitle").textContent=curDate===todayStr()?"오늘 총 섭취량":"이 날의 총 섭취량";
   document.getElementById("entryCount").textContent=list.length?list.length+"건":"기록 없음";
 
-  const t=+store.settings.target||0;
+  const t=+store.target||0;
   const fill=document.getElementById("targetFill");
+  const track=document.getElementById("targetTrack");
   if(t>0){
+    track.style.display="";
     document.getElementById("targetVal").textContent=t.toLocaleString()+" kcal";
     const pct=Math.round(total/t*100);
     document.getElementById("targetPct").textContent=pct+"%";
     fill.style.width=Math.min(pct,100)+"%";
     fill.classList.toggle("over",pct>100);
   }else{
+    track.style.display="none";
     document.getElementById("targetVal").textContent="미설정";
     document.getElementById("targetPct").textContent="";
-    fill.style.width="0%";fill.classList.remove("over");
-    document.querySelector(".target-track").style.display="none";
   }
-  document.querySelector(".target-track").style.display=t>0?"":"none";
 
-  const meals=["아침","점심","저녁","간식"];
   const el=document.getElementById("entryList");
   if(!list.length){
     el.innerHTML='<div class="empty"><b>아직 기록이 없습니다</b><p>위에 오늘 먹은 음식을 적어 추가해 보세요.<br>AI가 양까지 보고 칼로리를 계산해 줍니다.</p></div>';
   }else{
-    el.innerHTML=meals.map(ml=>{
+    el.innerHTML=MEALS.map(ml=>{
       const items=list.filter(e=>e.meal===ml);
       if(!items.length)return"";
       const ms=items.reduce((s,e)=>s+(+e.kcal||0),0);
       return '<div class="meal-block"><div class="meal-label"><span>'+ml+'</span><span>'+ms.toLocaleString()+' kcal</span></div>'
         +items.map(e=>
-          '<div class="entry"><div class="nm"><b>'+esc(e.name)+'</b><small>'+esc(e.portion||"")+'</small></div>'
+          '<div class="entry" data-id="'+e.id+'"><div class="nm"><b>'+esc(e.name)+'</b><small>'+esc(e.portion||"")+'</small></div>'
           +'<div class="kc">'+(+e.kcal).toLocaleString()+' <small>kcal</small></div>'
-          +'<button class="del" data-id="'+e.id+'" aria-label="삭제">✕</button></div>'
+          +'<button class="del" data-del="'+e.id+'" aria-label="삭제">✕</button></div>'
         ).join("")+'</div>';
     }).join("");
-    el.querySelectorAll(".del").forEach(b=>b.onclick=()=>{
-      const id=b.dataset.id;
-      store.entries[curDate]=store.entries[curDate].filter(e=>e.id!==id);
-      save();renderAll();
+    el.querySelectorAll(".entry").forEach(row=>{
+      row.onclick=e=>{
+        if(e.target.closest(".del"))return;
+        openEdit(curDate,row.dataset.id);
+      };
+    });
+    el.querySelectorAll(".del").forEach(b=>b.onclick=ev=>{
+      ev.stopPropagation();
+      const id=b.dataset.del;
+      setDay(curDate,getDay(curDate).filter(e=>e.id!==id));
+      renderAll();
     });
   }
   renderWeek();
@@ -440,15 +740,14 @@ function renderAll(){
 function renderWeek(){
   const wrap=document.getElementById("weekChart");
   const days=[];
-  const [y,m,d]=todayStr().split("-").map(Number);
+  const[y,m,d]=todayStr().split("-").map(Number);
   const base=new Date(y,m-1,d);
   for(let i=6;i>=0;i--){
     const dt=new Date(base);dt.setDate(base.getDate()-i);
     const key=fmt(dt);
-    const tot=(store.entries[key]||[]).reduce((s,e)=>s+(+e.kcal||0),0);
-    days.push({key,tot,lb:DOWS[dt.getDay()],isToday:key===todayStr(),isSel:key===curDate});
+    days.push({key,tot:totalOf(key),lb:DOWS[dt.getDay()],isSel:key===curDate});
   }
-  const max=Math.max(...days.map(x=>x.tot),+store.settings.target||0,1);
+  const max=Math.max(...days.map(x=>x.tot),+store.target||0,1);
   wrap.innerHTML=days.map(x=>{
     const h=x.tot?Math.max(6,Math.round(x.tot/max*100)):0;
     return '<div class="day'+(x.isSel?' sel':'')+'"><div class="bar'+(x.tot?'':' zero')+'" style="height:'+h+'%">'
@@ -472,27 +771,53 @@ function renderRecent(){
   });
 }
 
-/* ───────────────── 입력 ───────────────── */
+/* ── 달력 ── */
+function renderMonth(){
+  document.getElementById("monthTitle").textContent=calY+"년 "+calM+"월";
+  const first=new Date(calY,calM-1,1);
+  const dim=new Date(calY,calM,0).getDate();
+  const lead=first.getDay();
+  const t=+store.target||0;
+  const cells=[];
+  for(let i=0;i<lead;i++)cells.push('<div class="cal-cell blank"></div>');
+  let monthSum=0;
+  for(let d=1;d<=dim;d++){
+    const key=calY+"-"+String(calM).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+    const tot=totalOf(key);
+    monthSum+=tot;
+    const dow=(lead+d-1)%7;
+    const cls="cal-cell"
+      +(key===todayStr()?" today":"")
+      +(key===curDate&&view==="month"?" sel":"");
+    const kcls="kc"+(t>0&&tot>t?" over":"");
+    cells.push('<button class="'+cls+'" data-date="'+key+'">'
+      +'<span class="num">'+d+'</span>'
+      +(tot?'<span class="'+kcls+'">'+tot.toLocaleString()+'</span>':'')
+      +'</button>');
+  }
+  document.getElementById("calGrid").innerHTML=
+    DOWS.map((w,i)=>'<div class="cal-dow'+(i===0?' sun':'')+'">'+w+'</div>').join("")+cells.join("");
+  const nDays=Object.keys(data.entries).filter(k=>k.startsWith(calY+"-"+String(calM).padStart(2,"0"))).length;
+  document.getElementById("calSum").innerHTML=
+    monthSum?'한 달 합계 <b>'+monthSum.toLocaleString()+' kcal</b> · 기록한 날 <b>'+nDays+'일</b>':"이 달에는 기록이 아직 없습니다";
+  document.querySelectorAll(".cal-cell[data-date]").forEach(c=>{
+    c.onclick=()=>{curDate=c.dataset.date;view="day";renderAll();};
+  });
+}
+
+/* ═══════════════ 입력 ═══════════════ */
 function setMeal(m){
   curMeal=m;
   document.querySelectorAll("#mealSeg button").forEach(b=>b.classList.toggle("on",b.dataset.meal===m));
 }
-document.getElementById("mealSeg").addEventListener("click",e=>{
-  if(e.target.dataset.meal)setMeal(e.target.dataset.meal);
-});
+$("mealSeg").addEventListener("click",e=>{if(e.target.dataset.meal)setMeal(e.target.dataset.meal);});
 
-const foodInput=document.getElementById("foodInput");
-const btnAdd=document.getElementById("btnAdd");
+const foodInput=$("foodInput");
+const btnAdd=$("btnAdd");
 foodInput.addEventListener("keydown",e=>{if(e.key==="Enter")submitFood();});
 btnAdd.onclick=()=>submitFood(false);
 
-function toast(msg,err){
-  const t=document.getElementById("toast");
-  t.textContent=msg;t.classList.toggle("err",!!err);t.classList.add("show");
-  clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove("show"),3200);
-}
-
-/* ───────────────── Gemini 호출 ───────────────── */
+/* ═══════════════ Gemini 호출 ═══════════════ */
 const SYS_PROMPT=
 "너는 음식 칼로리 추정기다. 사용자가 한국어로 먹은 음식(들)과 양을 입력한다.\n"+
 "규칙:\n"+
@@ -504,8 +829,8 @@ const SYS_PROMPT=
 '출력은 JSON만: {"items":[{"name":"음식명","portion":"양 설명","kcal":정수}],"note":""}';
 
 async function callGemini(text){
-  const key=store.settings.apiKey.trim();
-  const models=[store.settings.model||DEFAULT_MODEL,...FALLBACK_MODELS]
+  const key=store.apiKey.trim();
+  const models=[store.model||DEFAULT_MODEL,...FALLBACK_MODELS]
     .filter((m,i,a)=>a.indexOf(m)===i);
   let lastErr=null;
   for(const model of models){
@@ -525,9 +850,9 @@ async function callGemini(text){
       if([503,500,429].includes(res.status)){lastErr=new Error(msg);continue;}
       throw new Error(msg);
     }
-    const data=await res.json();
-    const raw=data.candidates&&data.candidates[0]&&data.candidates[0].content&&data.candidates[0].content.parts
-      ?data.candidates[0].content.parts.map(p=>p.text||"").join(""):"";
+    const resData=await res.json();
+    const raw=resData.candidates&&resData.candidates[0]&&resData.candidates[0].content&&resData.candidates[0].content.parts
+      ?resData.candidates[0].content.parts.map(p=>p.text||"").join(""):"";
     let parsed;
     try{parsed=JSON.parse(raw);}
     catch(e){
@@ -544,7 +869,7 @@ async function submitFood(fromRecent){
   if(busy)return;
   const text=foodInput.value.trim();
   if(!text){foodInput.focus();return;}
-  if(!store.settings.apiKey.trim()){
+  if(!store.apiKey.trim()){
     toast("먼저 설정에서 Gemini API 키를 입력하세요",true);
     openSheet();return;
   }
@@ -556,15 +881,16 @@ async function submitFood(fromRecent){
     if(!items.length){
       toast(out.note||"음식으로 인식되지 않았습니다",true);
     }else{
-      if(!store.entries[curDate])store.entries[curDate]=[];
+      const list=getDay(curDate);
       for(const it of items){
-        store.entries[curDate].push({
+        list.push({
           id:Date.now()+"-"+Math.random().toString(36).slice(2,7),
           meal:curMeal,name:it.name,portion:it.portion||"",kcal:Math.round(+it.kcal)
         });
       }
+      setDay(curDate,list);
       store.recent=[{text,meal:curMeal,kcal:items.reduce((s,i)=>s+(+i.kcal||0),0)},...(store.recent||[]).filter(r=>r.text!==text)].slice(0,12);
-      save();renderAll();
+      savePrefs();renderAll();
       foodInput.value="";foodInput.blur();
       toast(items.length+"개 항목을 "+curMeal+"에 기록했습니다");
     }
@@ -579,68 +905,92 @@ async function submitFood(fromRecent){
   }
 }
 
-/* ───────────────── 설정 ───────────────── */
-const overlay=document.getElementById("overlay");
+/* ═══════════════ 기록 수정 ═══════════════ */
+let editDate=null,editId=null;
+function openEdit(date,id){
+  const e=getDay(date).find(x=>x.id===id);
+  if(!e)return;
+  editDate=date;editId=id;
+  $("editMeal").value=e.meal||"아침";
+  $("editName").value=e.name||"";
+  $("editPortion").value=e.portion||"";
+  $("editKcal").value=e.kcal;
+  $("editOverlay").classList.add("show");
+}
+$("btnEditCancel").onclick=()=>$("editOverlay").classList.remove("show");
+$("editOverlay").addEventListener("click",e=>{if(e.target===$("editOverlay"))$("editOverlay").classList.remove("show");});
+$("btnEditSave").onclick=()=>{
+  const list=getDay(editDate);
+  const e=list.find(x=>x.id===editId);
+  if(!e){$("editOverlay").classList.remove("show");return;}
+  e.meal=$("editMeal").value;
+  e.name=$("editName").value.trim()||e.name;
+  e.portion=$("editPortion").value.trim();
+  const k=+$("editKcal").value;
+  if(!Number.isFinite(k)||k<0){toast("칼로리를 숫자로 입력하세요",true);return;}
+  e.kcal=Math.round(k);
+  setDay(editDate,list);
+  $("editOverlay").classList.remove("show");
+  renderAll();
+  toast("수정했습니다");
+};
+$("btnDeleteEntry").onclick=()=>{
+  if(!confirm("이 기록을 삭제할까요?"))return;
+  setDay(editDate,getDay(editDate).filter(x=>x.id!==editId));
+  $("editOverlay").classList.remove("show");
+  renderAll();
+  toast("삭제했습니다");
+};
+
+/* ═══════════════ 설정 ═══════════════ */
+const overlay=$("overlay");
 function openSheet(){
-  document.getElementById("apiKey").value=store.settings.apiKey||"";
-  document.getElementById("modelSel").value=store.settings.model||"gemini-3.6-flash";
-  document.getElementById("targetInput").value=store.settings.target||"";
+  $("apiKey").value=store.apiKey||"";
+  $("modelSel").value=store.model||DEFAULT_MODEL;
+  $("targetInput").value=store.target||"";
+  $("acctBox").hidden=!uid;
+  if(uid)$("acctWho").textContent=auth.currentUser.email;
   overlay.classList.add("show");
 }
-document.getElementById("btnSettings").onclick=openSheet;
+$("btnSettings").onclick=openSheet;
 overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.classList.remove("show");});
-document.getElementById("btnSave").onclick=()=>{
-  store.settings.apiKey=document.getElementById("apiKey").value.trim();
-  store.settings.model=document.getElementById("modelSel").value;
-  store.settings.target=Math.max(0,+document.getElementById("targetInput").value||0);
-  save();overlay.classList.remove("show");renderAll();
-  toast(store.settings.apiKey?"설정을 저장했습니다":"API 키 없이 저장되었습니다");
+$("btnSave").onclick=()=>{
+  store.apiKey=$("apiKey").value.trim();
+  store.model=$("modelSel").value;
+  store.target=Math.max(0,+$("targetInput").value||0);
+  savePrefs();overlay.classList.remove("show");renderAll();
+  toast(store.apiKey?"설정을 저장했습니다":"API 키 없이 저장되었습니다");
 };
-document.getElementById("btnExport").onclick=()=>{
-  const blob=new Blob([JSON.stringify({entries:store.entries,settings:{model:store.settings.model,target:store.settings.target}},null,2)],{type:"application/json"});
+$("btnExport").onclick=()=>{
+  const blob=new Blob([JSON.stringify({entries:data.entries,settings:{model:store.model,target:store.target}},null,2)],{type:"application/json"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
   a.download="칼로리장부_"+todayStr()+".json";
   a.click();URL.revokeObjectURL(a.href);
 };
-document.getElementById("btnImport").onclick=()=>document.getElementById("importFile").click();
-document.getElementById("importFile").onchange=e=>{
+$("btnImport").onclick=()=>$("importFile").click();
+$("importFile").onchange=e=>{
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=()=>{
     try{
       const j=JSON.parse(r.result);
       if(!j.entries||typeof j.entries!=="object")throw 0;
-      store.entries=Object.assign({},store.entries,j.entries);
-      save();renderAll();toast("기록을 불러왔습니다");
+      for(const[k,v]of Object.entries(j.entries)){
+        if(Array.isArray(v))setDay(k,v);
+      }
+      renderAll();toast("기록을 불러왔습니다");
     }catch(_){toast("파일 형식이 올바르지 않습니다",true);}
   };
   r.readAsText(f);e.target.value="";
 };
-document.getElementById("btnClear").onclick=()=>{
-  if(!confirm("모든 날짜의 기록을 삭제합니다. 되돌릴 수 없습니다. 계속할까요?"))return;
-  store.entries={};store.recent=[];save();renderAll();toast("모든 기록을 삭제했습니다");
+$("btnClear").onclick=()=>{
+  if(!confirm("이 계정(또는 이 기기)의 모든 날짜 기록을 삭제합니다. 되돌릴 수 없습니다. 계속할까요?"))return;
+  const dates=Object.keys(data.entries);
+  for(const d of dates)setDay(d,[]);
+  store.recent=[];savePrefs();renderAll();
+  toast("모든 기록을 삭제했습니다");
 };
-
-/* ───────────────── 데모 프리뷰(기록 저장 안 함) ───────────────── */
-function maybeDemo(){
-  if(!new URLSearchParams(location.search).has("demo"))return;
-  store.entries[todayStr()]=[
-    {id:"d1",meal:"아침",name:"계란토스트",portion:"1개 + 우유 1컵",kcal:480},
-    {id:"d2",meal:"점심",name:"김치찌개와 공깃밥",portion:"1인분 + 밥 1공기",kcal:780},
-    {id:"d3",meal:"간식",name:"아메리카노",portion:"톨, 무설탕",kcal:10},
-    {id:"d4",meal:"저녁",name:"삼겹살 구이",portion:"3인분 + 상추쌈",kcal:1520},
-    {id:"d5",meal:"저녁",name:"소주",portion:"반 병",kcal:320}
-  ];
-  store.settings.target=2000;
-  for(let i=1;i<7;i++){
-    const [y,m,d]=todayStr().split("-").map(Number);
-    const dt=new Date(y,m-1,d-i);
-    store.entries[fmt(dt)]=[{id:"x"+i,meal:"저녁",name:"예시 기록",portion:"",kcal:[1650,2100,1880,1420,2260,1740][i-1]}];
-  }
-}
-maybeDemo();
-renderAll();
 </script>
 </body>
 </html>
